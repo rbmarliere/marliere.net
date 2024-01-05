@@ -1,0 +1,19 @@
+baseURL: https://marliere.net/
+languageCode: en-us
+title: Ricardo's Blog
+params:
+  description: Ricardo B. Marliere homepage.
+markup:
+  goldmark:
+    parser:
+      attribute:
+        block: true
+  highlight:
+    style: gruvbox-light
+outputs:
+  home:
+  - html
+  - rss
+  section:
+  taxonomy:
+  term:

@@ -1,0 +1,73 @@
+==================================================================
+https://keybase.io/zaratustra
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://marliere.net
+  * I am zaratustra (https://keybase.io/zaratustra) on keybase.
+  * I have a public key with fingerprint 030A 8E9E 424E E3C0 6557  87E1 C90B 8A7C 6386 58A6
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01201d75c610808f7b4bd40b6bc13494ac6235fdb8b1653c517b942e5802cfe88a500a",
+      "fingerprint": "030a8e9e424ee3c0655787e1c90b8a7c638658a6",
+      "host": "keybase.io",
+      "key_id": "c90b8a7c638658a6",
+      "kid": "0101591b36416f0c4bd95e344b2f3dacde45d0031892584e78230ee56523adb45ea00a",
+      "uid": "1fcedc313b10242d1df3021d471f8219",
+      "username": "zaratustra"
+    },
+    "service": {
+      "hostname": "marliere.net",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1692050263,
+  "expire_in": 157680000,
+  "prev": "9d5ca8b31e6b68988b18d8d2b4eb64fae4e8d584357cdbd8ac78ed34d0566b42",
+  "seqno": 115,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+
+owFtUntQVFUc3kWtYXmJBVmkwiWMEaL7vncXBOMxgLiakYESs917z7nLFfbh3eWx
+ImhIkAQGOmPQBKgJOgYWEo062AMoCNKISAJbBVJXe2FhE+b0uEvyX+efM+c73/ed
+7/c7v1qfRSqN+nOvql1CRWareugWrwITb2cVI7wFOBBdMZIL5zeYB6DNbsiVAKJD
+UAxHMcBQAo2hLMqKDE/ygER5mhcwgtSSnEDjBCUCnuUxmiIECmN4LYlDikVxQYQs
+y1EoyiGRiCiZjVC2ypLZ7rYlUI6FWkjiJISEgNIUxbAMxAQtyrMcI9AES1MsRyvC
+HIvNrVDC8ZwNRkkWBVMOhvl4/8NfyI1ilBbjCZrEaBEVlNRaChIkyeMiATgBQJIC
+KEpgrBanWBIyLE6gEFI0hRMc4EkKcv/lzp+3w0QBAoHACB5DcRIHGBAJFMcAyWAi
+i2NaN9EGZTNnggp7Jydz9nybXeaQkkhEwQskAbpb667lPsfEyXkSlGGUGdoVtVW2
+2C2CJU+5ybHbrTadW2l3WN3UQsgb7psYeMkMlE4qigIo2ySLGdFhClOwS25XjNbi
+KIXiNBGJwCKrJEOD5GZQDM2iynK/AwsUSy2gBO5FlicwSPM0q2WV72MBC3CehDxN
+ihwkIQuUxhAUIwAesJzAsBAQJEApmuZJHHHXtcNsUcwxSknKGRVXm2Q0K4XLECnR
+7PMgFqvUGtWKwJDFizT7m+I3fv8xzKicWpi/JR7u4VNpPJcuINxSv7/D7+E/XN0+
+PJPktVwluHxLI+ufthH+LamNB5ODb0+V1SU81d/6UP+yA+eKfjy/RjXkCLye+1hO
+8+bPeqqHKq5VhWzauazwzNBzrTHlpoEO9fuHrDW/69MHT+lzd3d/2nU927Gi66V9
+nQPg9r2aW2nD716pi9sfuKEJPtq6RN022t/7R8CbTW+tHDAXubqflM6fc4atq2zg
+olNU33WIzrambesTIpJ3mLoTx6bOJid4IruPtP96rWG99+ZfwuNr+qbTC5M+GQs/
+cPV0hOdsy8Ysxmeus3Qk76g24pHpyptJbU6Xxzb93r4v/UOqadfdzrKfUiyhUa+F
+hca/bsn4Z/JbC1Pg3dYRdKNaX2ASg8Mah8eNezpKJi7NuramH3OcDYgx6Obav8jo
+wQtT69p7Dvq5vD/wqd3S9MpsqS52Q5nXHLhzesvNuA9HRur1fyah5t9GB/f85RXS
+5VG7dehS9JHYuzP16yYTb6z2f3bAz3lqOH8gdfkTzWsuor2povc6LPcis6n4WF6Z
+saxk+/FnTh52Zt7JPzpXuuqyKilI9tLEvPHR13vHLSUNj6+c0P9sPuFs/mZtyzvy
+lbTDUeVWpnfVw/WhL5iMLWsnT5gzG1LUoxcqxvy+aoxN2xWW9d7xuEQn/upo9nh5
+9AO+Z9L66kT96uawnICXk6tSLvjPBAedHHxw7JCDv1xRNx3j+3z2vw==
+=DiQ2
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/zaratustra
+
+==================================================================
