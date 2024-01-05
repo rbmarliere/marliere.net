@@ -1,0 +1,6 @@
+<header>
+  <a href="{{ .Site.BaseURL }}">Posts</a>
+  {{ range where .Site.RegularPages "Type" "page" }}
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  {{ end }}
+</header>

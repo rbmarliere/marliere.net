@@ -1,0 +1,157 @@
+<!doctype html><html><head><title>Ricardo's Blog</title>
+<meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:type" content="website"><meta property="og:image" content="/img/profile.png"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://marliere.net/posts/5/"><meta property="og:title" content="Ricardo's Blog"><meta property="og:description" content="
+    Introduction Ktest.pl is a powerful script, published in 2010 by Steven Rostedt, long time Linux contributor and Ftrace maintainer. Readily available upstream, along with other useful scripts and tools, you can use it in different ways to automate the process of building, installing and testing the Linux kernel.
+Motivation Ever since I restarted doing cross builds more frequently, I would occasionally forget to either set ARCH= or simply do a modules_install.
+  
+  "><meta name=twitter:card content="summary_large_image"><meta property="twitter:domain" content="https://marliere.net/"><meta property="twitter:url" content="https://marliere.net/posts/5/"><meta name=twitter:title content="Ricardo's Blog"><meta name=twitter:description content><meta name=twitter:image content="
+    Introduction Ktest.pl is a powerful script, published in 2010 by Steven Rostedt, long time Linux contributor and Ftrace maintainer. Readily available upstream, along with other useful scripts and tools, you can use it in different ways to automate the process of building, installing and testing the Linux kernel.
+Motivation Ever since I restarted doing cross builds more frequently, I would occasionally forget to either set ARCH= or simply do a modules_install.
+  
+  "><link rel=alternate type=application/rss+xml href=/index.xml title="Ricardo's Blog"><link rel=stylesheet href=/scss/main.min.313a33eaee7f41f4f0263a59b071ca600173cfbd5cfe0974b55ede439981b7f4.css integrity="sha256-MToz6u5/QfTwJjpZsHHKYAFzz71c/gl0tV7eQ5mBt/Q=" crossorigin=anonymous></head><body><div class=wrapper><header><a href=https://marliere.net/>Posts</a>
+<a href=/about/>About</a></header><main><div class=post-meta><div class=post-title>Using ktest.pl for kernel builds and ease of mind</div><div class=post-date>January 7, 2024</div></div><div class=post-content><h2 id=introduction>Introduction</h2><p><strong>Ktest.pl</strong> is a powerful script, <a href=https://lore.kernel.org/lkml/1288294944.18238.346.camel@gandalf.stny.rr.com/>published in 2010</a> by Steven Rostedt, long
+time Linux contributor and Ftrace maintainer. Readily <a href=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/ktest>available</a> upstream, along
+with other useful scripts and tools, you can use it in different ways to automate the
+process of building, installing and testing the Linux kernel.</p><h2 id=motivation>Motivation</h2><p>Ever since I restarted doing cross builds more frequently, I would occasionally forget
+to either set <strong>ARCH=</strong> or simply do a <strong>modules_install</strong>. Up until the point I
+actually figured out the problem I already had lost precious time. By then, I had no
+idea what the hell I was doing or what <strong>.config</strong> I was in. The solution came after
+watching Steven&rsquo;s presentation <a href="https://www.youtube.com/watch?v=rMhcCDNAx64">&ldquo;A unique way to maintain a Linux kernel
+subsystem&rdquo;</a> from last year&rsquo;s <a href=https://kernel-recipes.org>Kernel Recipes</a> conference.</p><p>Also, one of the things that I have been doing in the last months is to build and test
+<a href=https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git>stable release candidates</a> and sometimes <strong>-next</strong> trees. Ktest provided me
+a nice way of doing clean builds and keeping track of my default configuration across
+different work trees. It became as simple as this:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#b57614>cd</span> $LINUX/next
+</span></span><span style=display:flex><span>ktest <span style=color:#b57614>local</span>
+</span></span><span style=display:flex><span><span style=color:#b57614>cd</span> $LINUX/6.6.y
+</span></span><span style=display:flex><span>ktest <span style=color:#b57614>local</span>
+</span></span><span style=display:flex><span>reboot
+</span></span></code></pre></div><p>Without having to worry about keeping different <strong>.config</strong> files in sync across
+directories.</p><h2 id=basic-setup1>Basic Setup<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup></h2><p>Let&rsquo;s start from the beginning, this is what I use as a wrapper in
+<strong>~/.local/bin/ktest</strong><sup id=fnref:2><a href=#fn:2 class=footnote-ref role=doc-noteref>2</a></sup>:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>if</span> <span style=color:#af3a03>[</span> -z <span style=color:#79740e>&#34;</span>$1<span style=color:#79740e>&#34;</span> <span style=color:#af3a03>]</span>; <span style=color:#af3a03>then</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>echo</span> <span style=color:#79740e>&#34;usage: ktest &lt;config&gt;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>basepath<span style=color:#af3a03>=</span>$HOME/ktest  <span style=color:#928374;font-style:italic># change this if you want it elsewhere</span>
+</span></span><span style=display:flex><span>config<span style=color:#af3a03>=</span><span style=color:#af3a03>$(</span>realpath <span style=color:#79740e>&#34;</span>$basepath<span style=color:#79740e>/</span>$1<span style=color:#79740e>.conf&#34;</span><span style=color:#af3a03>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>if</span> <span style=color:#af3a03>[</span> ! -f <span style=color:#79740e>&#34;</span>$config<span style=color:#79740e>&#34;</span> <span style=color:#af3a03>]</span>; <span style=color:#af3a03>then</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>echo</span> <span style=color:#79740e>&#34;config file not found: </span>$config<span style=color:#79740e>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>$basepath/ktest.pl $config
+</span></span></code></pre></div><p>This way you can launch the script from any tree. Now, assuming you have a Linux git
+repository in <strong>$LINUX</strong>:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#928374;font-style:italic># LINUX=/path/to/mainline</span>
+</span></span><span style=display:flex><span>cp -r $LINUX/tools/testing/ktest $HOME
+</span></span><span style=display:flex><span>mkdir -p $HOME/ktest/<span style=color:#af3a03>{</span>build,config<span style=color:#af3a03>}</span>/local
+</span></span><span style=display:flex><span>mkdir $HOME/ktest/scripts
+</span></span><span style=display:flex><span>cp /boot/config-6.6.9-amd64 $HOME/ktest/config/local/stable
+</span></span></code></pre></div><p>Note that <strong>/boot/config-6.6.9-amd64</strong> is just an example taken from <a href=https://tracker.debian.org/pkg/linux-signed-amd64>Debian</a>.
+It is a huge configuration carefully tailored by the Debian Kernel Team to support most
+of the hardware out there in the wild. You should probably <a href="https://www.kernel.org/doc/html/latest/admin-guide/quickly-build-trimmed-linux.html?highlight=localmodconfig">trim that down</a> using
+<strong>make localmodconfig</strong> for day to day usage.</p><p>This is an example of a standalone ktest configuration, put this in
+<strong>$HOME/ktest/local.conf</strong> (or wherever you put the ktest directory):</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>MACHINE <span style=color:#af3a03>=</span> <span style=color:#b57614>local</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>THIS_DIR <span style=color:#af3a03>=</span> <span style=color:#79740e>/home/</span>rbmarliere<span style=color:#af3a03>/</span>ktest
+</span></span><span style=display:flex><span>BUILD_DIR <span style=color:#af3a03>=</span> ${PWD}
+</span></span><span style=display:flex><span>CONFIG_DIR <span style=color:#af3a03>=</span> ${THIS_DIR}<span style=color:#79740e>/config/</span>${MACHINE}
+</span></span><span style=display:flex><span>OUTPUT_DIR <span style=color:#af3a03>=</span> ${THIS_DIR}<span style=color:#79740e>/build/</span>${MACHINE}
+</span></span><span style=display:flex><span>SCRIPTS_DIR <span style=color:#af3a03>=</span> ${THIS_DIR}<span style=color:#af3a03>/</span>scripts
+</span></span><span style=display:flex><span>CLEAR_LOG <span style=color:#af3a03>=</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span>LOG_FILE <span style=color:#af3a03>=</span> ${OUTPUT_DIR}<span style=color:#af3a03>/</span>${MACHINE}<span style=color:#af3a03>.</span><span style=color:#b57614>log</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>LOCALVERSION <span style=color:#af3a03>=</span> <span style=color:#af3a03>-</span>ktest
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>TEST_START
+</span></span><span style=display:flex><span>TEST_TYPE <span style=color:#af3a03>=</span> build
+</span></span><span style=display:flex><span>BUILD_OPTIONS <span style=color:#af3a03>=</span> <span style=color:#af3a03>-</span>j$(nproc) bindeb<span style=color:#af3a03>-</span>pkg
+</span></span><span style=display:flex><span>BUILD_NOCLEAN <span style=color:#af3a03>=</span> <span style=color:#8f3f71>0</span>
+</span></span><span style=display:flex><span>BUILD_TYPE <span style=color:#af3a03>=</span> useconfig:${CONFIG_DIR}<span style=color:#af3a03>/</span>stable
+</span></span><span style=display:flex><span>POST_BUILD <span style=color:#af3a03>=</span> ${SCRIPTS_DIR}<span style=color:#af3a03>/</span>local_install ${KERNEL_VERSION} ${OUTPUT_DIR}
+</span></span></code></pre></div><p>As you can see, the <strong>TEST_TYPE</strong> is the most simple one: it just builds the kernel. The
+<strong>BUILD_TYPE</strong> ensures that the <strong>stable</strong> configuration is used. The <strong>POST_BUILD</strong>
+points to a script that actually installs the generated <strong>.deb</strong> packages and update the
+boot loader. Add this to <strong>~/.local/ktest/scripts/local_install</strong>:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>if</span> <span style=color:#af3a03>[</span> $# -ne <span style=color:#8f3f71>2</span> <span style=color:#af3a03>]</span>; <span style=color:#af3a03>then</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>echo</span> <span style=color:#79740e>&#34;usage: </span>$0<span style=color:#79740e> &lt;kernel version&gt; &lt;build output dir&gt;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>VERSION<span style=color:#af3a03>=</span>$1
+</span></span><span style=display:flex><span>BUILD<span style=color:#af3a03>=</span>$2
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b57614>pushd</span> <span style=color:#79740e>&#34;</span>$BUILD<span style=color:#79740e>/..&#34;</span> <span style=color:#af3a03>||</span> <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sudo dpkg -i ./linux-<span style=color:#af3a03>{</span>image,headers<span style=color:#af3a03>}</span>*<span style=color:#79740e>&#34;</span>$VERSION<span style=color:#79740e>&#34;</span>*.deb <span style=color:#af3a03>&amp;&amp;</span> sudo update-grub
+</span></span><span style=display:flex><span>rm -rf ./*<span style=color:#79740e>&#34;</span>$VERSION<span style=color:#79740e>&#34;</span>*<span style=color:#af3a03>{</span>deb,changes,buildinfo<span style=color:#af3a03>}</span>
+</span></span><span style=display:flex><span>rm -rf ./*<span style=color:#af3a03>{</span>upstream,libc<span style=color:#af3a03>}</span>*<span style=color:#af3a03>{</span>deb,changes,buildinfo<span style=color:#af3a03>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b57614>popd</span>
+</span></span></code></pre></div><h2 id=cross-compilation-setup>Cross-compilation Setup</h2><p>If you remember from the <a href=https://marliere.net/posts/4/>last post</a>, I was experimenting with NFS and U-Boot.
+That is, the board will boot from the kernel I have available locally on my development
+host through tftp. Here is what I use as <strong>rpi32.conf</strong>:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>MACHINE <span style=color:#af3a03>=</span> rpi32
+</span></span><span style=display:flex><span>DTB <span style=color:#af3a03>=</span> broadcom<span style=color:#af3a03>/</span>bcm2837<span style=color:#af3a03>-</span>rpi<span style=color:#af3a03>-</span><span style=color:#8f3f71>3</span><span style=color:#af3a03>-</span>b<span style=color:#af3a03>.</span>dtb
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>INCLUDE include<span style=color:#af3a03>/</span>defaults<span style=color:#af3a03>.</span>conf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>DEFAULTS OVERRIDE
+</span></span><span style=display:flex><span>MAKE_CMD <span style=color:#af3a03>=</span> CROSS_COMPILE<span style=color:#af3a03>=</span><span style=color:#79740e>/usr/</span>bin<span style=color:#af3a03>/</span>arm<span style=color:#af3a03>-</span>linux<span style=color:#af3a03>-</span>gnueabihf<span style=color:#af3a03>-</span> make ARCH<span style=color:#af3a03>=</span>arm
+</span></span><span style=display:flex><span>BUILD_TARGET <span style=color:#af3a03>=</span> arch<span style=color:#79740e>/arm/</span>boot<span style=color:#af3a03>/</span>zImage
+</span></span><span style=display:flex><span>POST_BUILD <span style=color:#af3a03>=</span> ${SCRIPTS_DIR}<span style=color:#af3a03>/</span>tftp_install ${KERNEL_VERSION} ${OUTPUT_DIR} ${BUILD_TARGET} ${MACHINE} ${DTB}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>TEST_START
+</span></span><span style=display:flex><span>TEST_TYPE <span style=color:#af3a03>=</span> build
+</span></span><span style=display:flex><span>BUILD_TYPE <span style=color:#af3a03>=</span> allnoconfig
+</span></span><span style=display:flex><span>BUILD_NOCLEAN <span style=color:#af3a03>=</span> <span style=color:#8f3f71>0</span>
+</span></span></code></pre></div><p>As you can see, the <strong>MAKE_CMD</strong> is responsible of making sure that the build as always
+made with the correct environment. Also, the build start point is an <strong>allnoconfig</strong>,
+but that&rsquo;s because in my <strong>include/defaults.conf</strong> I have the following:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>MIN_CONFIG <span style=color:#af3a03>=</span> ${CONFIG_DIR}<span style=color:#af3a03>/</span>config<span style=color:#af3a03>-</span>min
+</span></span></code></pre></div><p>In that file, I put the minimal configuration <a href=https://marliere.net/posts/3/>from before</a>, with some added
+enabled symbols like <strong>NFS_FS</strong>, <strong>SERIAL_AMBA_PL011_CONSOLE</strong>, <strong>BCM_VIDEOCORE</strong>, etc.
+That file is the bare minimum to be able to boot the machine, the basis from which ktest
+will randomize the configuration if that is part of the test. But for this simple example,
+it will only build and install the kernel. This time, using a different script, though:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>
+</span></span><span style=display:flex><span>TFTP<span style=color:#af3a03>=</span>$HOME/ftp  <span style=color:#928374;font-style:italic># or wherever...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>if</span> <span style=color:#af3a03>[</span> $# -lt <span style=color:#8f3f71>4</span> <span style=color:#af3a03>]</span>; <span style=color:#af3a03>then</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>echo</span> <span style=color:#79740e>&#34;usage: </span>$0<span style=color:#79740e> &lt;kernel version&gt; &lt;build output dir&gt; &lt;build target&gt; &lt;machine&gt; [dtb]&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>VERSION<span style=color:#af3a03>=</span>$1
+</span></span><span style=display:flex><span>BUILD<span style=color:#af3a03>=</span>$2
+</span></span><span style=display:flex><span>TARGET<span style=color:#af3a03>=</span>$3
+</span></span><span style=display:flex><span>MACHINE<span style=color:#af3a03>=</span>$4
+</span></span><span style=display:flex><span>DTB<span style=color:#af3a03>=</span>$5
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b57614>pushd</span> $TFTP <span style=color:#af3a03>||</span> <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mkdir -p $MACHINE
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b57614>pushd</span> $MACHINE <span style=color:#af3a03>||</span> <span style=color:#b57614>exit</span> <span style=color:#8f3f71>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cp $BUILD/$TARGET linux-$VERSION
+</span></span><span style=display:flex><span>ln -sf linux-$VERSION linux
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#af3a03>if</span> <span style=color:#af3a03>[</span> -n <span style=color:#79740e>&#34;</span>$DTB<span style=color:#79740e>&#34;</span> <span style=color:#af3a03>]</span>; <span style=color:#af3a03>then</span>
+</span></span><span style=display:flex><span>	cp $BUILD/<span style=color:#af3a03>$(</span>dirname $TARGET<span style=color:#af3a03>)</span>/dts/$DTB .
+</span></span><span style=display:flex><span>	ln -sf <span style=color:#af3a03>$(</span>basename $DTB<span style=color:#af3a03>)</span> dtb
+</span></span><span style=display:flex><span><span style=color:#af3a03>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b57614>popd</span>
+</span></span><span style=display:flex><span><span style=color:#b57614>popd</span>
+</span></span></code></pre></div><p>This will put the <strong>dtb</strong> and <strong>zImage</strong> in <strong>$TFTP/$MACHINE/dtb</strong> and
+<strong>$TFTP/$MACHINE/linux</strong> as symlinks to the original files, which is where the U-Boot
+script expect to find them.</p><h2 id=virtual-machine-setup>Virtual Machine Setup</h2><p>This one is also straight forward and actually way better <a href=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/ktest/examples/kvm.conf>documented</a>. Just make
+sure that you add the relevant entry to the boot loader with <strong>console=ttyS0</strong> so that
+ktest is able to read it.</p><h2 id=conclusion>Conclusion</h2><p>I only scratched the surface here, but you can also test random kernel configurations,
+bisect issues, run custom tests inside the machine, etc. So do go ahead and read the
+<a href=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/ktest/sample.conf>documentation</a> for adapting it to your needs and make sure to review the
+<a href=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/ktest/examples>examples</a> too. You can also draw some inspiration from <a href=https://github.com/rostedt/ftrace-ktests>this
+repository</a>. The goal of this post was to bring awareness to this
+excellent tool, seeing that it improved my workflow a lot after adopting it.</p><hr><h2 id=references>References:</h2><ul><li><a href=https://lore.kernel.org/lkml/1288294944.18238.346.camel@gandalf.stny.rr.com/>ktest.pl: Easy and flexible testing script for Linux Kernel Developers</a></li><li><a href=https://elinux.org/images/f/fd/Automated_Testing_with_ktest.pl_(Embedded_Edition).pdf>ktest.pl – tutorial (Embedded Edition)</a></li><li><a href=https://blogs.vmware.com/opensource/2021/08/31/ktest-with-vmware-guest/>Ktest with VMware Guest</a></li><li><a href=https://blogs.oracle.com/linux/post/so-you-are-a-linux-kernel-programmer-and-you-want-to-do-some-automated-testing>So, you are a Linux kernel programmer and you want to do some automated
+testing&mldr;</a></li></ul><div class=footnotes role=doc-endnotes><hr><ol><li id=fn:1><p>These scripts are just a suggestion, based on the way I use the tool. Adapt to
+your own liking.&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:2><p>Make sure <strong>~/.local/bin</strong> is in your $PATH and the script is executable.&#160;<a href=#fnref:2 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></div></div></main><footer>&copy; <a href=https://github.com/rbmarliere/marliere.net>Copyleft</a>
+2024 Ricardo B. Marliere
+<a href=/index.xml title="Ricardo's Blog"><i class="fa-solid fa-rss"></i></a></footer></div></body></html>

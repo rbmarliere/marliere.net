@@ -1,0 +1,12 @@
+{{ define "main" }}
+  {{ range .Paginator.Pages }}
+    {{- if eq .Section "posts" }}
+      <div class="post-list">
+        <dl>
+          <dt><a href="{{ .RelPermalink }}">{{ .Title }}</a></dt>
+          <dd>{{ .Date.Format "2006-01-02" }}</dd>
+        </dl>
+      </div>
+    {{- end }}
+  {{ end }}
+{{ end }}
