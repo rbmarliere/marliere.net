@@ -12,3 +12,8 @@ rm -rf public/
 hugo
 git add --all public resources/_gen
 ```
+
+post-clone:
+```bash
+~/.local/share/nvim/mason/bin/vale sync
+```
