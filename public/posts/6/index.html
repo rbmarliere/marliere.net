@@ -1,15 +1,121 @@
 <!doctype html><html><head><title>Ricardo's Blog</title>
 <meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:type" content="website"><meta property="og:image" content="/img/profile.png"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://marliere.net/posts/6/"><meta property="og:title" content="Ricardo's Blog"><meta property="og:description" content="
-    Demo of the basic features of the get_maintainer.nvim plugin. Neovim is a vim fork which aims to improve on its predecessor much like how vim improved vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to improve vim&rsquo;s concurrency capabilities. It has been 10 years since and it has been very popular so far. Meanwhile, one could argue that it also pushed vim a little into learning a few new tricks.
+    Neovim is a Vim fork which aims to improve on its predecessor much like how Vim improved Vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to improve Vim&rsquo;s concurrency capabilities. It has been 10 years since and it has gotten very popular so far. Meanwhile, one could argue that it also pushed Vim a little into learning a few new tricks. RIP Bram, by the way, his legacy will be remembered for generations to come.
   
   "><meta name=twitter:card content="summary_large_image"><meta property="twitter:domain" content="https://marliere.net/"><meta property="twitter:url" content="https://marliere.net/posts/6/"><meta name=twitter:title content="Ricardo's Blog"><meta name=twitter:description content><meta name=twitter:image content="
-    Demo of the basic features of the get_maintainer.nvim plugin. Neovim is a vim fork which aims to improve on its predecessor much like how vim improved vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to improve vim&rsquo;s concurrency capabilities. It has been 10 years since and it has been very popular so far. Meanwhile, one could argue that it also pushed vim a little into learning a few new tricks.
+    Neovim is a Vim fork which aims to improve on its predecessor much like how Vim improved Vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to improve Vim&rsquo;s concurrency capabilities. It has been 10 years since and it has gotten very popular so far. Meanwhile, one could argue that it also pushed Vim a little into learning a few new tricks. RIP Bram, by the way, his legacy will be remembered for generations to come.
   
   "><link rel=alternate type=application/rss+xml href=/index.xml title="Ricardo's Blog"><link rel=stylesheet href=/scss/main.min.313a33eaee7f41f4f0263a59b071ca600173cfbd5cfe0974b55ede439981b7f4.css integrity="sha256-MToz6u5/QfTwJjpZsHHKYAFzz71c/gl0tV7eQ5mBt/Q=" crossorigin=anonymous></head><body><div class=wrapper><header><a href=https://marliere.net/>Posts</a>
-<a href=/about/>About</a></header><main><div class=post-meta><div class=post-title>Neovim for kernel development</div><div class=post-date>March 4, 2024</div></div><div class=post-content><figure><a href=https://github.com/rbmarliere/get_maintainer.nvim><img src=/img/getmaintainer.gif></a><figcaption><h4>Demo of the basic features of the get_maintainer.nvim plugin.</h4></figcaption></figure><p>Neovim is a vim <a href=https://github.com/neovim/neovim/commit/72cf89bce8e4230dbc161dc5606f48ef9884ba70>fork</a> which aims to improve on its predecessor much like how vim
-improved vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to
-improve vim&rsquo;s <a href=https://groups.google.com/g/vim_use/c/IKha1xx6V8Y/m/xwxHSe4dAwcJ>concurrency capabilities</a>. It has been 10 years since and it has
-been very popular so far. Meanwhile, one could argue that it also pushed vim a little
-into learning a few new tricks. RIP Bram, by the way.</p><p>gitcommit snippets</p><p>kickstart</p><p>lsp</p><p>clangd vs cscope</p><p>checkpatch</p><p>get_maintainer</p><p>dap</p></div></main><footer>&copy; <a href=https://github.com/rbmarliere/marliere.net>Copyleft</a>
+<a href=/about/>About</a></header><main><div class=post-meta><div class=post-title>Neovim for kernel development</div><div class=post-date>March 7, 2024</div></div><div class=post-content><p>Neovim is a Vim <a href=https://github.com/neovim/neovim/commit/72cf89bce8e4230dbc161dc5606f48ef9884ba70>fork</a> which aims to improve on its predecessor much like how Vim
+improved Vi. It was started by a Brazilian developer, Thiago de Arruda, mostly to
+improve Vim&rsquo;s <a href=https://groups.google.com/g/vim_use/c/IKha1xx6V8Y/m/xwxHSe4dAwcJ>concurrency capabilities</a>. It has been 10 years since and it has
+gotten very popular so far. Meanwhile, one could argue that it also pushed Vim a little
+into learning a few new tricks. RIP Bram, by the way, his legacy will be remembered for
+generations to come. In this post I want to share a few tips on configuring Neovim for a
+nice Linux Kernel development experience.</p><h2 id=introduction>Introduction</h2><p>As many of you know, to configure and customize Vim you need to learn Vimscript. From my
+experience, it isn&rsquo;t a friendly language. I&rsquo;m sure I&rsquo;m not alone in this take because
+Neovim developers chose Lua for its embedded language. <a href=https://www.lua.org/about.html>Lua</a> is a very straight
+forward language, also originated in Brazil. It has some interesting users, such as
+World of Warcraft user interface and Ginga, a Brazilian middleware for digital TV which
+introduced me to Lua when I was in college. If you have a vimrc and is not sure of
+making the leap to a Lua based configuration, you should try out <a href=https://github.com/nvim-lua/kickstart.nvim>kickstart</a>. For a full
+introduction, it&rsquo;s creator &mdash; TJ DeVries, a core Neovim maintainer &mdash; made a great
+<a href="https://www.youtube.com/watch?v=m8C0Cq9Uv9o">video</a> about it. Some other great tips are also shared by ThePrimeagen
+<a href="https://www.youtube.com/watch?v=w7i4amO_zaE">here</a>.</p><p>When I first got into Vim, in 2015, I was fascinated and my configuration files grew
+larger and quicker than they should have. Everything was so new that most of the things
+I wasn&rsquo;t even using and eventually I trimmed it all down into a minimalistic setup with
+as few plugins as possible, so that I could focus on the important thing: learning Vim
+the right way, i.e. leveraging as much of its core features as I could. A problem with
+Neovim, in my opinion, is that its plugin ecosystem is so big and Lua makes it so easy
+to configure things that the urge to install another one to cover that little corner of
+a workflow is almost irresistible. That may trick some newcomers into acquiring some bad
+habits, but that&rsquo;s all part of the game, I guess. What can I say, my <a href=https://github.com/rbmarliere/dotfiles>dotfiles</a> are as
+big as they ever were.</p><h2 id=treesitter--lsp>Treesitter & LSP</h2><p>Specifically for Linux kernel development, though, there is this <a href=https://stackoverflow.com/questions/33676829/vim-configuration-for-linux-kernel-development>great post</a>.
+It leverages cscope and ctags for source indexing, which is still very useful. However,
+there are two things that Neovim supports which VSCode users will find familiar:
+Treesitter and LSP. <a href=https://tree-sitter.github.io>Treesitter</a> enables more advanced syntax highlighting and <a href=https://microsoft.github.io/language-server-protocol/>LSP</a>,
+the Language Server Protocol, is the Microsoft open standard that VSCode uses in the
+back-end for things like auto completion and finding references.</p><p>Since late 2018, as far as I know, it is possible to build Linux using clang. If you do
+it, there is a helper <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b30204640192234d18f9168f19f9cd693485b86d">script</a> that will generate a compile_commands.json file
+which can be used by <a href=https://clangd.llvm.org/>clangd</a> LSP <a href=https://github.com/neovim/nvim-lspconfig>within Neovim</a>. What I usually do is to
+run a allmodconfig build in Linus&rsquo; tree and use its compile_commands.json in the root of
+all the other worktrees I have around. That way I only have to index once, but it comes
+with a few caveats:</p><ul><li>Since my host is x86_64, messing around with arch-specific files will show many
+missing symbol errors, since they weren&rsquo;t included in the build and therefore the
+compile_commands.json file.</li><li>It is painfully slow to setup and index everything, but once it&rsquo;s done it&rsquo;s very
+useful.</li><li>As you change files in a worktree, errors will inevitably appear since the index
+reference is pinned to Linus'.</li><li>When jumping to references, if they&rsquo;re not within the same file, it takes me to Linus'
+tree and sometimes I&rsquo;ll edit that tree instead of the one I&rsquo;m in. That can be
+distracting.</li></ul><p><figure><a href=https://github.com/hrsh7th/nvim-cmp><img src=/img/lsp_completion.png></a><figcaption><h4>LSP completions with nvim-cmp.</h4></figcaption></figure><figure><a href=https://github.com/nvim-telescope/telescope.nvim><img src=/img/lsp_references.png></a><figcaption><h4>LSP references within Telescope.</h4></figcaption></figure></p><p>If, however, you can&rsquo;t build with clang for some reason or you&rsquo;re doing too much
+building that re-indexing all the time is simply not worth it, or perhaps LSP is just
+not your cup of tea, then fear not: you can still use cscope with Neovim. Official
+support for it <a href=https://github.com/neovim/neovim/pull/20545>has been dropped</a>, but there&rsquo;s a <a href=https://github.com/joe-skb7/cscope-maps>plugin</a> that
+does it. I even added a small Telescope <a href=https://github.com/rbmarliere/telescope-cscope.nvim>picker</a> for it. <a href=https://github.com/nvim-telescope/telescope.nvim>Telescope</a>
+is a powerful plugin that by itself is, in my humble opinion, capable of making even
+Vim&rsquo;s most loyal users at least consider Neovim. It is a highly extendable fuzzy finder
+that works with anything. You can pick buffers, help tags, man pages, LSP symbols,
+quickfix items, registers, git files, you name it.</p><figure><a href=https://github.com/nvim-telescope/telescope.nvim><img src=/img/lsp_pickers.png></a><figcaption><h4>Available builtin LSP pickers.</h4></figcaption></figure><h2 id=linters>Linters</h2><p>A great script used by many, especially by newcomers like myself, is <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0a920b5b666d0be8141bd1ce620fffa7de96b81b">checkpatch.pl</a>.
+Some maintainers dislike it, but anyone not used to the kernel coding style is highly
+encouraged to use it. During my mentorship in the <a href=https://mentorship.lfx.linuxfoundation.org/project/65d4c337-66fd-4d22-8a21-e836fafbebc4>Linux Foundation</a>, the
+tip was to use it as a git post-commit hook:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#b57614>exec</span> git show --format<span style=color:#af3a03>=</span>email HEAD | ./scripts/checkpatch.pl --strict --codespell
+</span></span></code></pre></div><p>That is very useful, but what if you had it as a linter in your editor? This is very
+straight forward to setup using <a href=https://github.com/mfussenegger/nvim-lint/>nvim-lint</a>.</p><figure><a href=https://github.com/nvim-telescope/telescope.nvim><img src=/img/checkpatch.png></a><figcaption><h4>Viewing checkpatch.pl rules applied inline.</h4></figcaption></figure><p>There is also <a href=https://github.com/Rust-for-Linux/klint>klint</a> for the rusty side of the kernel, but I still haven&rsquo;t found a way
+of integrating it into Neovim.</p><h2 id=get_maintainernvim>get_maintainer.nvim</h2><p>In the past few weeks I have been working on a few cleanup patches suggested by Greg
+Kroah-Hartman. The challenge was not so much the patch themselves, but submitting them
+correctly into their respective trees. Initially I was going through each commit,
+calling get_maintainer.pl by hand and checking in MAINTAINERS which tree (T:) I should
+base them off of. Then I realized I would need to send a new patch to the same
+maintainer again, whereas I could&rsquo;ve squashed or assembled a series instead. Then I
+finally discovered that get_maintainer.pl has a --scm option that also gives you the
+relevant scm (source code management) trees.</p><p>So, with that, I decided to customize Neovim by writing a small <a href=https://github.com/rbmarliere/get_maintainer.nvim>plugin</a>
+that would integrate nicely with the legendary <a href=https://github.com/tpope/vim-fugitive>vim-fugitive</a>. I needed a wrapper that
+would call get_maintainer.pl for the current file, ref or list of refs. That way I could
+better organize which patches should be sent to whom and properly cherry-pick them on b4
+branches for sending.</p><figure><a href=https://github.com/rbmarliere/get_maintainer.nvim><img src=/img/getmaintainer.gif></a><figcaption><h4>Demo of the basic features of the get_maintainer.nvim plugin.</h4></figcaption></figure><h2 id=snippets>Snippets</h2><p>For the same task, instead of manually typing or pasting very similar commit messages
+and risk introducing errors, I went ahead and defined a few snippets in Lua using
+<a href=https://github.com/L3MON4D3/LuaSnip>LuaSnip</a>. Providing a snippet engine is a prerequisite for setting up LSP completions,
+so I just chose the one where I could define them with Lua. It&rsquo;s very powerful once you
+get the hang of it, so no more writing tags such as Cc:, Tested-by: and Suggested-by: or
+frequently used email addresses by hand for me. Since you can define snippets based on
+file types, you could even setup some things you always type like mail signatures, if
+you use something like neomutt.</p><h2 id=debugger>Debugger</h2><p>Many people argue that Vim is just a text editor and a full IDE is always to be
+preferred and a key point to that is because using a debugger is easier. It&rsquo;s true that
+learning Lua and spending more time configuring the editor is not for everyone, but it
+can be quite satisfying and rewarding. In any case, there is also another Microsoft
+creation apart from LSP that Neovim supports: the <a href=https://microsoft.github.io/debug-adapter-protocol//>Debug Adapter Protocol</a>. For
+integration, you need <a href=https://github.com/mfussenegger/nvim-dap>nvim-dap</a> and I highly recommend the <a href=https://github.com/rcarriga/nvim-dap-ui>nvim-dap-ui</a> as well so you
+get a nice default user interface from the get go. Now, you only need an adapter and for
+C/C++ that would be <a href=https://github.com/microsoft/vscode-cpptools>cpptools</a>. To make your life easier you can use <a href=https://github.com/williamboman/mason.nvim>Mason</a> to install
+it and many others. Make sure to disable RANDOMIZE_BASE, then you would need something
+like this:</p><div class=highlight><pre tabindex=0 style=color:#3c3836;background-color:#fbf1c7;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-lua data-lang=lua><span style=display:flex><span><span style=color:#af3a03>local</span> dap <span style=color:#af3a03>=</span> require(<span style=color:#79740e>&#34;dap&#34;</span>) <span style=color:#928374;font-style:italic>-- https://github.com/mfussenegger/nvim-dap</span>
+</span></span><span style=display:flex><span><span style=color:#928374;font-style:italic>-- dap.set_log_level(&#34;TRACE&#34;)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>dap.adapters.cppdbg <span style=color:#af3a03>=</span> {
+</span></span><span style=display:flex><span>  id <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;cppdbg&#34;</span>,
+</span></span><span style=display:flex><span>  type <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;executable&#34;</span>,
+</span></span><span style=display:flex><span>  command <span style=color:#af3a03>=</span> vim.fn.stdpath(<span style=color:#79740e>&#34;data&#34;</span>) <span style=color:#af3a03>..</span> <span style=color:#79740e>&#34;/mason/bin/OpenDebugAD7&#34;</span>, <span style=color:#928374;font-style:italic>-- if you use mason</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>dap.configurations.c <span style=color:#af3a03>=</span> {
+</span></span><span style=display:flex><span>	{
+</span></span><span style=display:flex><span>		name <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;Attach to gdbserver :1234&#34;</span>,
+</span></span><span style=display:flex><span>		type <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;cppdbg&#34;</span>,
+</span></span><span style=display:flex><span>		request <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;launch&#34;</span>,
+</span></span><span style=display:flex><span>		MIMode <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;gdb&#34;</span>,
+</span></span><span style=display:flex><span>		miDebuggerServerAddress <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;localhost:1234&#34;</span>,
+</span></span><span style=display:flex><span>		miDebuggerPath <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;/usr/bin/gdb&#34;</span>,
+</span></span><span style=display:flex><span>		cwd <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;${workspaceFolder}&#34;</span>,
+</span></span><span style=display:flex><span>		stopAtEntry <span style=color:#af3a03>=</span> <span style=color:#af3a03>false</span>,
+</span></span><span style=display:flex><span>		args <span style=color:#af3a03>=</span> { <span style=color:#79740e>&#34;-ex&#34;</span>, <span style=color:#79740e>&#34;continue&#34;</span> },
+</span></span><span style=display:flex><span>		program <span style=color:#af3a03>=</span> <span style=color:#79740e>&#34;/mnt/md0/linux/ktest/build/sid/vmlinux&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#928374;font-style:italic>-- program = function()</span>
+</span></span><span style=display:flex><span>		<span style=color:#928374;font-style:italic>--   return vim.fn.input(&#34;Path to vmlinux: &#34;, vim.fn.getcwd() .. &#34;/&#34;, &#34;file&#34;)</span>
+</span></span><span style=display:flex><span>		<span style=color:#928374;font-style:italic>-- end,</span>
+</span></span><span style=display:flex><span>	},
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><figure><img src=/img/dap.png><figcaption><h4>Remote session targeting a QEMU machine.</h4></figcaption></figure><p>It&rsquo;s certainly not perfect, especially for such a complex project. I&rsquo;ve used it
+extensively for Python debugging in the past and it&rsquo;s very good for that. I hope this
+article made you curious about Neovim, or helped in any way if you&rsquo;re already a user.
+Let me know if something should be in here that I&rsquo;ve missed! Happy hacking.</p></div></main><footer>&copy; <a href=https://github.com/rbmarliere/marliere.net>Copyleft</a>
 2024 Ricardo B. Marliere
 <a href=/index.xml title="Ricardo's Blog"><i class="fa-solid fa-rss"></i></a></footer></div></body></html>
