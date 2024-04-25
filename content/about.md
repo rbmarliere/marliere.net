@@ -16,7 +16,7 @@ license.
 
 ---
 
-[{{< fa solid key 2x >}}](/638658A6.txt "My Public Key")
+[{{< fa solid key 2x >}}](/C90B8A7C638658A6.txt "My Public Key")
 [{{< fa brands linkedin 2x >}}](https://linkedin.com/in/rbmarliere "My LinkedIn Profile")
 [{{< fa brands github 2x >}}](https://github.com/rbmarliere "My Github Profile")
 [{{< fa brands x-twitter 2x >}}](https://x.com/rbmarliere "My X Profile")
