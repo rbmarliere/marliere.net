@@ -18,12 +18,10 @@ license.
 
 [{{< fa solid key 2x >}}](/C90B8A7C638658A6.txt "My Public Key")
 [{{< fa brands linkedin 2x >}}](https://linkedin.com/in/rbmarliere "My LinkedIn Profile")
+[{{< fa brands git-alt 2x >}}](https://git.marliere.net "My Git Repositories")
 [{{< fa brands github 2x >}}](https://github.com/rbmarliere "My Github Profile")
-[{{< fa brands x-twitter 2x >}}](https://x.com/rbmarliere "My X Profile")
-[{{< fa brands instagram 2x >}}](https://instagram.com/ricardo.marliere "My Instagram Profile")
 [{{< fa brands telegram 2x >}}](https://t.me/rbmarliere "My Telegram Profile")
 [{{< fa brands debian 2x >}}](https://salsa.debian.org/rbmarliere "My Debian Profile")
-[{{< fa solid music 2x >}}][pathos]
 {.prolink}
 
 [ricardo@marliere.net](mailto:ricardo@marliere.net "My Email")
