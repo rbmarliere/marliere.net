@@ -5,14 +5,14 @@ date = 2023-09-05T21:21:39-03:00
 
 {{< figure src="/img/profile.png" >}}
 
-My name is Ricardo, I'm a software engineer born in Brazil in July of the year 1991.
-When I'm not at my desk studying about computers and technology or occasionally gaming,
-I like to [play guitar][pathos] and write songs. I have a small vinyl
-[collection][discogs] and own a few vintage out of print esoteric books. On some
-weekends, if I'm lucky, I'll be crossing the finish line in a racing car at a track
-somewhere. But more commonly I'll be offline enjoying the company of my beautiful wife
-and the amazing things she cook. I'm also a private pilot currently pursuing my IFR
-license.
+Hi, my name is Ricardo and I'm from Brazil. I love computers since my early teens and I
+have mostly worked with web development professionally but always with a strong
+curiosity and passion for operating systems and open source software. When I’m not at my
+desk studying technology or occasionally gaming, I like to [play guitar][pathos] and
+write songs. I have a small [vinyl collection][discogs] and own a few old out of print
+books. On some weekends, if I’m lucky, I’ll be crossing the finish line in a racing car
+at a track somewhere. But more commonly I’m enjoying the company of my beautiful wife
+and the amazing things she cook. I’m also a private pilot and aviation geek.
 
 ---
 
