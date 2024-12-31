@@ -230,3 +230,17 @@ code.language-shell > span.line::before {
     }
   }
 }
+.heading-with-anchor {
+  position: relative;
+}
+
+.anchor-link {
+  opacity: 0;
+  text-decoration: none;
+  margin-left: 0.5em;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.heading-with-anchor:hover .anchor-link {
+  opacity: 1;
+}
