@@ -9,7 +9,7 @@ markup:
       attribute:
         block: true
   highlight:
-    style: gruvbox-light
+    style: abap
 outputs:
   home:
   - html
