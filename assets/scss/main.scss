@@ -1,4 +1,5 @@
 @import "./fonts.scss";
+@import "./syntax.scss";
 
 html {
   height: 100%;
@@ -165,6 +166,10 @@ figcaption > * {
   }
 }
 
+code {
+  background-color: whitesmoke !important;
+}
+
 .highlight pre {
   overflow-x: auto;
   background-color: whitesmoke !important;
@@ -174,6 +179,10 @@ figcaption > * {
   content: "#!/bin/bash \A\A";
   color: #888;
   font-style: italic;
+}
+
+code.language-shell > span.line::before {
+  content: "$ ";
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

@@ -9,7 +9,7 @@ markup:
       attribute:
         block: true
   highlight:
-    style: abap
+    noClasses: false
 outputs:
   home:
   - html
