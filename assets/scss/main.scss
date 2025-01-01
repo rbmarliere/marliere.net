@@ -56,6 +56,7 @@ main {
   display: flex;
   flex: 1;
   flex-direction: column;
+  padding: 0.7em;
 }
 
 footer {
@@ -105,21 +106,20 @@ figcaption > * {
 }
 
 .post-list {
-  dl {
-    padding: 0.7em;
-  }
-  dt {
-    text-align: left;
-  }
-  dd {
-    text-align: right;
-    font-weight: bold;
-    color: #076678;
-  }
+  color: #076678;
+  font-weight: bold;
+}
+
+.post-list td {
+  padding-top: 1em;
+}
+
+.post-list td:nth-child(2) {
+  padding-left: 0.7em;
+  white-space: nowrap;
 }
 
 .post-entry {
-  padding: 0.7em;
   font-size: 1.2em;
   max-width: 100%;
 }
@@ -129,9 +129,8 @@ figcaption > * {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  text-align: center;
   max-width: 100%;
-  padding-left: 0.7em;
-  padding-right: 0.7em;
   padding-top: 2em;
   color: #076678;
 }
@@ -147,7 +146,7 @@ figcaption > * {
 }
 
 .post-content {
-  padding: 0.7em;
+  padding-top: 0.7em;
   font-size: 1.2em;
   max-width: 100%;
   dl {
@@ -211,47 +210,14 @@ code.language-shell > span.line::before {
   .prolink {
     width: 50%;
   }
-  .post-list {
-    dl {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 0.7em;
-    }
-    dt {
-      margin: 0;
-    }
-    dd {
-      font-weight: bold;
-      color: #076678;
-      margin: 0;
-      margin-left: 0.5em;
-    }
-  }
 }
 
 @media (min-width: 1024px) {
   .prolink {
     width: 40%;
   }
-  .post-list {
-    dl {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 0.7em;
-    }
-    dt {
-      margin: 0;
-    }
-    dd {
-      font-weight: bold;
-      color: #076678;
-      margin: 0;
-      margin-left: 0.5em;
-    }
-  }
 }
+
 .heading-with-anchor {
   position: relative;
 }
