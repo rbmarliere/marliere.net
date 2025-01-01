@@ -2,6 +2,8 @@
 title: "About"
 ---
 
+---
+
 {{< figure src="/img/profile.png" >}}
 
 Hi, my name is Ricardo and I'm from Brazil. I love computers since my early teens and
@@ -22,6 +24,9 @@ cook. I’m also a private pilot and aviation geek.
 {.prolink}
 
 [ricardo@marliere.net](mailto:ricardo@marliere.net "My Email")
+{.center}
+
+[{{< fa solid arrow-left 2x >}}](/)
 {.center}
 
 [SUSE]: https://www.suse.com/
