@@ -73,6 +73,10 @@ img {
   margin-right: auto;
 }
 
+figure {
+  margin: 0;
+}
+
 figcaption > *:before {
   content: "\00a0 - ";
 }
