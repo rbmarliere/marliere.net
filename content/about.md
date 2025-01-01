@@ -1,6 +1,6 @@
-+++
-title = 'About'
-+++
+---
+title: "About"
+---
 
 {{< figure src="/img/profile.png" >}}
 

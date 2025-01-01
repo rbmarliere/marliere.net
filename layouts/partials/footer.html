@@ -1,7 +1,19 @@
 <footer>
-  &copy; <a href="https://github.com/rbmarliere/marliere.net">Copyleft</a>
-  {{ now.Format "2006" }} <a href="/about">Ricardo B. Marliere</a>
-  <a href="/index.xml" title="{{ .Site.Title }}">
-    <i class="fa-solid fa-rss"></i>
-  </a>
+  {{ if eq .Section "posts" }}
+    <div class="footer-back-to-top">
+      <a href="#" title="Back to top">
+        <i class="fa-solid fa-arrow-up fa-2x"></i>
+      </a>
+    </div>
+  {{ end }}
+  <div>
+    &copy;
+    <a href="https://github.com/rbmarliere/marliere.net">Copyleft</a>
+    {{ now.Format "2006" }}
+    <a href="/about">Ricardo B. Marliere</a>
+    &nbsp;
+    <a href="/index.xml" title="{{ .Site.Title }}">
+      <i class="fa-solid fa-rss"></i>
+    </a>
+  </div>
 </footer>
