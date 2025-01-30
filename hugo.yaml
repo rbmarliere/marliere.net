@@ -2,7 +2,7 @@ baseURL: https://marliere.net/
 languageCode: en-us
 title: Ricardo's Blog
 params:
-  description: Ricardo B. Marliere homepage.
+  description: Ricardo B. Marlière homepage.
 markup:
   goldmark:
     parser:
